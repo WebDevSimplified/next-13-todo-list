@@ -1,5 +1,6 @@
 import { TodoItem } from "@/components/TodoItem"
 import { prisma } from "@/db"
+import { revalidatePath } from 'next/cache'
 import Link from "next/link"
 
 function getTodos() {
@@ -10,6 +11,7 @@ async function toggleTodo(id: string, complete: boolean) {
   "use server"
 
   await prisma.todo.update({ where: { id }, data: { complete } })
+  revalidatePath("/")
 }
 
 export default async function Home() {
