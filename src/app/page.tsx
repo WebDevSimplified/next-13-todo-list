@@ -1,4 +1,5 @@
 import { TodoItem } from "@/components/TodoItem"
+import { DeleteItem } from "@/components/DeleteItem"
 import { prisma } from "@/db"
 import Link from "next/link"
 
@@ -11,6 +12,12 @@ async function toggleTodo(id: string, complete: boolean) {
 
   await prisma.todo.update({ where: { id }, data: { complete } })
 }
+
+const deleteTodo = async () => {
+  "use server"
+  await prisma.todo.deleteMany({ where: { complete: true } })
+}
+
 
 export default async function Home() {
   const todos = await getTodos()
@@ -25,6 +32,7 @@ export default async function Home() {
         >
           New
         </Link>
+         <DeleteItem deleteTodo={deleteTodo} />  
       </header>
       <ul className="pl-4">
         {todos.map(todo => (
