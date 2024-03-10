@@ -2,6 +2,7 @@ import { TodoItem } from "@/components/TodoItem"
 import { DeleteItem } from "@/components/DeleteItem"
 import { prisma } from "@/db"
 import Link from "next/link"
+import { revalidatePath } from "next/cache"
 
 function getTodos() {
   return prisma.todo.findMany()
@@ -16,6 +17,7 @@ async function toggleTodo(id: string, complete: boolean) {
 const deleteTodo = async () => {
   "use server"
   await prisma.todo.deleteMany({ where: { complete: true } })
+  revalidatePath("/")
 }
 
 
